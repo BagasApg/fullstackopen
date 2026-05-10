@@ -7,7 +7,7 @@ sequenceDiagram
   activate server
   server-->>browser: Redirect (302)
   deactivate server
-  Note left of server: Redirects page after submit
+  Note left of server: redirects page after submit
 
   browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
   activate server
