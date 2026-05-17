@@ -25,6 +25,7 @@ const App = () => {
 		setVotes(newVotes);
 	};
 
+	
 	const mostVotes = () => {
 		let max = 0;
 		let index = 0;
