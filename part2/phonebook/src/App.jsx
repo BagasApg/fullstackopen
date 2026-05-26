@@ -3,6 +3,9 @@ import personService from './services/notes.js'
 import Filter from './components/Filter.jsx'
 import PersonForm from './components/PersonForm.jsx'
 import Persons from './components/Persons.jsx'
+import Notification from './components/Notification.jsx'
+
+import './style.css'
 
 const App = () => {
 	const [persons, setPersons] = useState([])
@@ -11,12 +14,13 @@ const App = () => {
 		number: ''
 	})
 	const [search, setSearch] = useState('')
+	const [alertMessage, setAlertMessage] = useState(null)
+	const [alertType, setAlertType] = useState('')
 
 	const hook = () => {
 		personService
 			.getAll()
 			.then(initialPersons => {
-				console.log(initialPersons)
 				setPersons(initialPersons)
 			})
 	}
@@ -43,6 +47,12 @@ const App = () => {
 			personService
 				.create(newPerson)
 				.then(returnedPerson => {
+					setAlertMessage(`Added ${returnedPerson.name}`)
+					setAlertType('success')
+					setTimeout(() => {
+						setAlertMessage(null)
+						setAlertType('')
+					}, 3000)
 					setPersons(persons.concat(returnedPerson))
 				})
 				.catch(error => {
@@ -53,7 +63,6 @@ const App = () => {
 
 	const deletePerson = (id) => () => {
 		const person = persons.find(n => n.id === id)
-		console.log(persons)
 		if (window.confirm(`Delete ${person.name} ?`)) {
 
 			personService
@@ -61,6 +70,15 @@ const App = () => {
 				.then(deletedPerson => {
 					const personsAfterDelete = persons.filter(p => p.id !== id)
 					setPersons(personsAfterDelete)
+				})
+				.catch(error => {
+					setAlertMessage(`Information of ${person.name} has already been removed from server`)
+					setAlertType('danger')
+					setTimeout(() => {
+						setAlertMessage(null)
+						setAlertType('')
+					}, 3000)
+					setPersons(persons.filter(p => p.id !== id))
 				})
 
 		}
@@ -88,6 +106,7 @@ const App = () => {
 	return (
 		<div>
 			<h2>Phonebook</h2>
+			<Notification type={alertType} message={alertMessage} />
 			<Filter onChange={handleSearchInput} />
 
 			<h2>add a new</h2>

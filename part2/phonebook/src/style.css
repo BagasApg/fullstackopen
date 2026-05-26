@@ -1,0 +1,17 @@
+.success {
+   margin-bottom: 8px;
+   color: #000000;
+   background-color: #d1e7dd;
+   padding: 1rem;
+   border: 1px solid #a3cfbb;
+   border-radius: 0.4rem;
+}
+
+.danger {
+   margin-bottom: 8px;
+   color: #000000;
+   background-color: #f8d7db;
+   padding: 1rem;
+   border: 1px solid #f1aeb5;
+   border-radius: 0.4rem;
+}
