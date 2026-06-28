@@ -15,9 +15,13 @@ let notes = [
 ]
 
 const generateId = () => {
-   const maxId = notes.length > 0
-      ? Math.max(...notes.map(n => Number(n.id)))
-      : 0
+   if (notes.length === 0) return "1"
+   
+   // Menggunakan .reduce() jauh lebih aman dibanding Math.max(...spread) di serverless
+   const maxId = notes.reduce((max, note) => {
+      const idNum = Number(note.id)
+      return idNum > max ? idNum : max
+   }, 0)
 
    return String(maxId + 1)
 }
