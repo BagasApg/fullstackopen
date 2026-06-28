@@ -6,7 +6,7 @@ const app = express()
 
 app.use(express.json())
 app.use(cors())
-app.use(express.static(path.join(process_cwd(), 'dist')))
+app.use(express.static(path.join(process.cwd(), 'dist')))
 
 let notes = [
    { id: "1", content: "HTML is easy", important: true },
