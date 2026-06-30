@@ -19,6 +19,7 @@ const App = () => {
 			.getAll()
 			.then(initialNotes => {
 				setNotes(initialNotes)
+				console.log(initialNotes)
 			})
 
 	}, [])
@@ -64,6 +65,7 @@ const App = () => {
 
 	const notesToShow = showAll ? notes : notes.filter(note => note.important)
 
+		console.log(notes)
 	return (
 		<div>
 			<h1>Notes</h1>
