@@ -34,9 +34,9 @@ app.get('/api/notes/:id', (request, response, next) => {
             response.status(404).end()
          }
       })
-      .catch(error => {
-         next(error)
-      })
+      // .catch(error => {
+      //    next(error)
+      // })
 })
 
 app.post('/api/notes', (request, response, next) => {
