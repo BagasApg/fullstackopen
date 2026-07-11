@@ -56,7 +56,13 @@ const App = () => {
 					setPersons(persons.concat(returnedPerson))
 				})
 				.catch(error => {
-					console.log("failed...")
+					console.log(error.response.data.error)
+					setAlertMessage(error.response.data.error)
+					setAlertType('danger')
+					setTimeout(() => {
+						setAlertMessage(null)
+						setAlertType('')
+					}, 7000)
 				})
 		}
 	}

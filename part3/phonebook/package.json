@@ -7,7 +7,7 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon api/index.js",
+    "start": "cls && nodemon api/index.js",
     "dev": "node --watch api/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -34,13 +34,16 @@ app.get('/api/notes/:id', (request, response, next) => {
             response.status(404).end()
          }
       })
-      // .catch(error => {
-      //    next(error)
-      // })
+   // .catch(error => {
+   //    next(error)
+   // })
 })
 
 app.post('/api/notes', (request, response, next) => {
    const body = request.body
+   if (!body.content) {
+      return response.status(400).json({ error: 'content missing' })
+   }
 
    const note = new Note({
       content: body.content,
