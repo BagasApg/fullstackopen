@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 
 // SRV error
-const dns = require('node:dns');
-dns.setServers(["1.1.1.1", "8.8.8.8"]);
+const dns = require('node:dns')
+dns.setServers(['1.1.1.1', '8.8.8.8'])
 //
 
 mongoose.set('strictQuery', false)
@@ -10,11 +10,12 @@ mongoose.set('strictQuery', false)
 const url = process.env.MONGODB_URI
 
 console.log('connecting to', url)
-mongoose.connect(url, { family: 4 })
-  .then(result => {
+mongoose
+  .connect(url, { family: 4 })
+  .then(() => {
     console.log('connected to MongoDB')
   })
-  .catch(error => {
+  .catch((error) => {
     console.log('error connecting to MongoDB:', error.message)
   })
 
@@ -22,7 +23,7 @@ const noteSchema = new mongoose.Schema({
   content: {
     type: String,
     minLength: 5,
-    required: true
+    required: true,
   },
   important: Boolean,
 })
@@ -32,8 +33,7 @@ noteSchema.set('toJSON', {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
     delete returnedObject.__v
-  }
+  },
 })
-
 
 module.exports = mongoose.model('Note', noteSchema)

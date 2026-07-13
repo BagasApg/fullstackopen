@@ -1,1 +1,16 @@
-.success{color:#000;background-color:#d1e7dd;border:1px solid #a3cfbb;border-radius:.4rem;margin-bottom:8px;padding:1rem}.danger{color:#000;background-color:#f8d7db;border:1px solid #f1aeb5;border-radius:.4rem;margin-bottom:8px;padding:1rem}
+.success {
+  color: #000;
+  background-color: #d1e7dd;
+  border: 1px solid #a3cfbb;
+  border-radius: 0.4rem;
+  margin-bottom: 8px;
+  padding: 1rem;
+}
+.danger {
+  color: #000;
+  background-color: #f8d7db;
+  border: 1px solid #f1aeb5;
+  border-radius: 0.4rem;
+  margin-bottom: 8px;
+  padding: 1rem;
+}

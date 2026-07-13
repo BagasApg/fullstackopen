@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 
 // SRV error
-const dns = require('node:dns');
-dns.setServers(["1.1.1.1", "8.8.8.8"]);
+const dns = require('node:dns')
+dns.setServers(['1.1.1.1', '8.8.8.8'])
 //
 
 mongoose.set('strictQuery', false)
@@ -10,11 +10,12 @@ mongoose.set('strictQuery', false)
 const url = process.env.MONGODB_URI
 
 console.log('connecting to', url)
-mongoose.connect(url, { family: 4 })
-  .then(result => {
+mongoose
+  .connect(url, { family: 4 })
+  .then(() => {
     console.log('connected to MongoDB')
   })
-  .catch(error => {
+  .catch((error) => {
     console.log('error connecting to MongoDB:', error.message)
   })
 
@@ -30,19 +31,18 @@ const personSchema = new mongoose.Schema({
       validator: function (v) {
         return /^(\d{2,3})-(\d+)$/.test(v)
       },
-      message: props => `${props.value} is not a valid phone number!`
+      message: (props) => `${props.value} is not a valid phone number!`,
     },
-    required: [true, "User phone number required"]
+    required: [true, 'User phone number required'],
   },
 })
 
 personSchema.set('toJSON', {
-  transform: (document, returnedObject) => {
+  transform: (returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
     delete returnedObject.__v
-  }
+  },
 })
-
 
 module.exports = mongoose.model('Person', personSchema)
