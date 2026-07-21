@@ -21,7 +21,7 @@ beforeEach(async () => {
 
 })
 
-test.only('blogs returned in JSON format', async () => {
+test('blogs returned in JSON format', async () => {
   console.log('starting test...')
   await api
     .get('/api/blogs')
@@ -29,10 +29,18 @@ test.only('blogs returned in JSON format', async () => {
     .expect('Content-Type', /application\/json/)
 })
 
-test.only('blogs returned are in the correct amount', async () => {
+test('blogs returned are in the correct amount', async () => {
+  const response = await api.get('/api/blogs')
+  console.log(response.body)
+  assert.strictEqual(response.body.length, helper.initialBlogs.length)
+})
+
+test.only('blogs returned have the id property instead of _id', async () => {
   const response = await api.get('/api/blogs')
 
-  assert.strictEqual(response.body.length, helper.initialBlogs.length)
+  const allHaveId = response.body.every(blog => blog.id !== undefined && blog._id === undefined)
+
+  assert.strictEqual(allHaveId, true)
 })
 
 after(async () => {
