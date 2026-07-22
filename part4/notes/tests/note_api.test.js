@@ -1,5 +1,5 @@
 const assert = require('node:assert')
-const { test, after, beforeEach } = require('node:test')
+const { test, after, beforeEach, describe } = require('node:test')
 
 const mongoose = require('mongoose')
 const supertest = require('supertest')
@@ -10,33 +10,37 @@ const Note = require('../models/note')
 
 const api = supertest(app)
 
-beforeEach(async () => {
+describe('when there is initially some notes saved', async () => {
+  beforeEach(async () => {
 
-  await Note.deleteMany({})
+    await Note.deleteMany({})
 
-  await Note.insertMany(helper.initialNotes)
+    await Note.insertMany(helper.initialNotes)
+  })
+
+
+  test('notes are returned as json', async () => {
+    console.log('entered test')
+    await api
+      .get('/api/notes')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+  })
+
+  test('all notes are returned', async () => {
+    const response = await api.get('/api/notes')
+
+    assert.strictEqual(response.body.length, helper.initialNotes.length)
+  })
+  test('a specific note is within the returned notes', async () => {
+    const response = await api.get('/api/notes')
+
+    const contents = response.body.map(e => e.content)
+    assert(contents.includes('HTML is easy'))
+  })
 })
 
-test('notes are returned as json', async () => {
-  console.log('entered test')
-  await api
-    .get('/api/notes')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-})
 
-test('all notes are returned', async () => {
-  const response = await api.get('/api/notes')
-
-  assert.strictEqual(response.body.length, helper.initialNotes.length)
-})
-
-test('a specific note is within the returned notes', async () => {
-  const response = await api.get('/api/notes')
-
-  const contents = response.body.map(e => e.content)
-  assert(contents.includes('HTML is easy'))
-})
 
 test('a valid note can be added', async () => {
   const newNote = {
