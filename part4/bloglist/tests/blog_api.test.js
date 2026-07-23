@@ -47,7 +47,7 @@ test('blogs returned have the id property instead of _id', async () => {
 })
 
 // exercise 4.10
-test.only('new blog can be successfully added', async () => {
+test('new blog can be successfully added', async () => {
   const newBlog = {
     title: 'Erat vel, malesuada, pulvinar odio bibendum pulvinar ut in amet euismod vestibulum. Fermentum et.',
     author: 'Azure',
@@ -62,15 +62,15 @@ test.only('new blog can be successfully added', async () => {
     .expect('Content-Type', /application\/json/)
 
   // to check if blogs amount is changed
-  const notesAtEnd = await helper.blogsInDb()
-  assert.strictEqual(notesAtEnd.length, helper.initialBlogs.length + 1)
+  const blogsAtEnd = await helper.blogsInDb()
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
 
   // to check if added blog is really there
-  const contents = notesAtEnd.map(blog => blog.title)
+  const contents = blogsAtEnd.map(blog => blog.title)
   assert(contents.includes(newBlog.title))
 
   // to actually check, properties by properties, if added blog is really there
-  const specificContents = notesAtEnd.map(blog => ({
+  const specificContents = blogsAtEnd.map(blog => ({
     title: blog.title,
     author: blog.author,
     url: blog.url,
@@ -97,19 +97,19 @@ test('blog with likes property missing can still be added with the likes set 0 a
 
 
   // to check if blogs amount is changed
-  const notesAtEnd = await helper.blogsInDb()
-  assert.strictEqual(notesAtEnd.length, helper.initialBlogs.length + 1)
+  const blogsAtEnd = await helper.blogsInDb()
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
 
   // to check if added blog is really there
-  const contents = notesAtEnd.map(blog => blog.title)
+  const contents = blogsAtEnd.map(blog => blog.title)
   assert(contents.includes(newBlog.title))
 
   // to check if added blog has 0 like
-  assert.strictEqual(notesAtEnd[2].likes, 0)
+  assert.strictEqual(blogsAtEnd[2].likes, 0)
 
 })
 
-describe.only('blog with title or url property missing can not be added', () => {
+describe('blog with title or url property missing can not be added', () => {
   test('with no title', async () => {
     const newNoTitle = {
       author: 'Azure',
@@ -125,9 +125,9 @@ describe.only('blog with title or url property missing can not be added', () => 
 
 
     // to check if blogs amount is still the same
-    const notesAtEnd = await helper.blogsInDb()
-    // console.log(notesAtEnd.length, helper.initialBlogs.length)
-    assert.strictEqual(notesAtEnd.length, helper.initialBlogs.length)
+    const blogsAtEnd = await helper.blogsInDb()
+    // console.log(blogsAtEnd.length, helper.initialBlogs.length)
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
 
   })
 
@@ -147,10 +147,49 @@ describe.only('blog with title or url property missing can not be added', () => 
 
 
     // to check if blogs amount is still the same
-    const notesAtEnd = await helper.blogsInDb()
-    // console.log(notesAtEnd.length, helper.initialBlogs.length)
-    assert.strictEqual(notesAtEnd.length, helper.initialBlogs.length)
+    const blogsAtEnd = await helper.blogsInDb()
+    // console.log(blogsAtEnd.length, helper.initialBlogs.length)
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
 
+  })
+})
+
+describe('deletion of a blog post', () => {
+  test('succeeds with statuscode 204 if id is valid', async () => {
+
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+
+    const blogsAtEnd = await helper.blogsInDb()
+
+    const ids = blogsAtEnd.map(b => b.id)
+    assert(!ids.includes(blogToDelete.id))
+
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+  })
+})
+
+describe.only('updating a blog post likes', () => {
+  test('succeeds with statuscode 200 if id is valid', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+
+    blogToUpdate.likes += 67
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(blogToUpdate)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, blogsAtStart.length)
+
+    assert.strictEqual(blogsAtEnd[0].likes, blogToUpdate.likes)
   })
 })
 
